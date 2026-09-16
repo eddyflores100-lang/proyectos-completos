@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Panel de Administración</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --warning: #f97316;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            color: var(--dark);
+            min-height: 100vh;
+        }
+        
+        .admin-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .admin-sidebar {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            border-right: 1px solid #334155;
+        }
+        
+        .admin-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .admin-nav {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: all 0.3s;
+        }
+        
+        .admin-nav-link:hover,
+        .admin-nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .admin-nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .admin-status {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-top: 2rem;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .status-value {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .admin-main {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .admin-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #0d9c6b;
+            transform: translateY(-2px);
+        }
+        
+        /* Projects Grid */
+        .projects-admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .project-admin-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+        
+        .project-admin-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .project-admin-header {
+            background: var(--gradient);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .project-admin-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .project-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .project-admin-body {
+            padding: 1.5rem;
+        }
+        
+        .project-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .metric-item {
+            text-align: center;
+            padding: 0.8rem;
+            background: #f8fafc;
+            border-radius: var(--radius);
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+        
+        /* System Info */
+        .system-info-admin {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: var(--radius);
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        /* Logs Panel */
+        .logs-panel {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logs-content {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .log-time {
+            color: var(--secondary);
+        }
+        
+        .log-level {
+            font-weight: 600;
+            margin: 0 0.5rem;
+        }
+        
+        .log-level.info { color: var(--primary); }
+        .log-level.warn { color: var(--warning); }
+        .log-level.error { color: var(--danger); }
+        
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card-admin {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .stat-card-admin h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card-admin p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Control Panel */
+        .control-panel {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .control-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .control-input {
+            padding: 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .control-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-sidebar {
+                height: auto;
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .admin-main {
+                padding: 1rem;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .projects-admin-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--secondary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-cogs"></i>
+                <span>Admin Panel</span>
+            </div>
+            
+            <ul class="admin-nav">
+                <li class="admin-nav-item">
+                    <a href="/admin" class="admin-nav-link active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="/admin/projects" class="admin-nav-link">
+                        <i class="fas fa-project-diagram"></i>
+                        <span>Proyectos</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="/admin/scraping" class="admin-nav-link">
+                        <i class="fas fa-search"></i>
+                        <span>Scraping</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="/admin/users" class="admin-nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="/admin/settings" class="admin-nav-link">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Configuración</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="/admin/logs" class="admin-nav-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Logs</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a href="/admin/backup" class="admin-nav-link">
+                        <i class="fas fa-database"></i>
+                        <span>Backup</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="admin-status">
+                <div class="status-item">
+                    <span>Estado:</span>
+                    <span class="status-value">Activo</span>
+                </div>
+                <div class="status-item">
+                    <span>Modo:</span>
+                    <span class="status-value">Producción</span>
+                </div>
+                <div class="status-item">
+                    <span>Versión:</span>
+                    <span class="status-value">1.0.0</span>
+                </div>
+                <div class="status-item">
+                    <span>Uptime:</span>
+                    <span class="status-value">99.9%</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <h1><%= title %></h1>
+                <div class="admin-actions">
+                    <button class="btn btn-success">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nuevo Proyecto
+                    </button>
+                    <button class="btn btn-danger">
+                        <i class="fas fa-power-off"></i> Reiniciar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card-admin animate">
+                    <h3><%= projects.length %></h3>
+                    <p>Proyectos Activos</p>
+                </div>
+                
+                <div class="stat-card-admin animate">
+                    <h3><%= systemInfo.memoryUsage.heapUsed / 1024 / 1024 | 0 %> MB</h3>
+                    <p>Uso de Memoria</p>
+                </div>
+                
+                <div class="stat-card-admin animate">
+                    <h3><%= Math.floor(systemInfo.uptime / 60) %> min</h3>
+                    <p>Tiempo Activo</p>
+                </div>
+                
+                <div class="stat-card-admin animate">
+                    <h3>100%</h3>
+                    <p>Disponibilidad</p>
+                </div>
+            </div>
+
+            <!-- Projects Grid -->
+            <h2 style="margin-bottom: 1rem;">🚀 Proyectos en Ejecución</h2>
+            <div class="projects-admin-grid">
+                <% projects.forEach(project => { %>

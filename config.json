@@ -1,0 +1,213 @@
+{
+  "app": {
+    "name": "Sistema Completo de Proyectos Automatizados",
+    "version": "1.0.0",
+    "author": "OpenClaw Automated System",
+    "description": "Sistema integral con landing pages, scraping, dashboard y panel de administración",
+    "license": "MIT",
+    "repository": "https://github.com/tusuario/proyectos-completos"
+  },
+  
+  "server": {
+    "port": 3000,
+    "host": "localhost",
+    "environment": "development",
+    "logLevel": "info",
+    "cors": {
+      "enabled": true,
+      "origins": ["http://localhost:3000", "http://localhost:8080"]
+    },
+    "security": {
+      "helmet": true,
+      "rateLimit": {
+        "enabled": true,
+        "windowMs": 900000,
+        "max": 100
+      }
+    }
+  },
+  
+  "scraping": {
+    "sources": {
+      "linkedin": {
+        "enabled": true,
+        "rateLimit": 1000,
+        "maxPages": 10,
+        "timeout": 30000
+      },
+      "indeed": {
+        "enabled": true,
+        "rateLimit": 800,
+        "maxPages": 15,
+        "timeout": 25000
+      },
+      "glassdoor": {
+        "enabled": true,
+        "rateLimit": 1200,
+        "maxPages": 8,
+        "timeout": 35000
+      },
+      "custom": {
+        "enabled": true,
+        "rateLimit": 500,
+        "timeout": 20000
+      }
+    },
+    
+    "processing": {
+      "parallelWorkers": 4,
+      "maxResults": 1000,
+      "autoExport": true,
+      "exportFormats": ["json", "csv", "excel"],
+      "compressResults": true
+    },
+    
+    "database": {
+      "enabled": true,
+      "type": "mysql",
+      "host": "localhost",
+      "port": 3306,
+      "database": "scraping_data",
+      "table": "leads",
+      "backup": {
+        "enabled": true,
+        "interval": "daily",
+        "keepDays": 30
+      }
+    }
+  },
+  
+  "landingPages": {
+    "saas": {
+      "enabled": true,
+      "path": "/saas-avanzado",
+      "analytics": true,
+      "seo": {
+        "title": "NexusAI - Plataforma SaaS de Automatización Inteligente",
+        "description": "Automatiza tu negocio con IA. La plataforma más avanzada para escalar procesos con machine learning.",
+        "keywords": ["saas", "ia", "automatización", "machine learning", "negocios"]
+      }
+    },
+    
+    "ecommerce": {
+      "enabled": true,
+      "path": "/ecommerce-premium",
+      "analytics": true,
+      "seo": {
+        "title": "LuxeStore - E-commerce Premium de Lujo",
+        "description": "Descubre productos exclusivos de lujo. Calidad artesanal, materiales premium y diseño atemporal.",
+        "keywords": ["ecommerce", "lujo", "premium", "productos exclusivos", "moda"]
+      }
+    }
+  },
+  
+  "dashboard": {
+    "enabled": true,
+    "path": "/dashboard",
+    "refreshInterval": 30000,
+    "charts": {
+      "enabled": true,
+      "types": ["line", "bar", "pie", "doughnut"]
+    },
+    "metrics": {
+      "scraping": true,
+      "landing": true,
+      "system": true,
+      "users": true
+    }
+  },
+  
+  "admin": {
+    "enabled": true,
+    "path": "/admin",
+    "features": {
+      "projectManagement": true,
+      "userManagement": true,
+      "systemMonitoring": true,
+      "logsViewer": true,
+      "backupManagement": true,
+      "settings": true
+    },
+    "security": {
+      "requireAuth": false,
+      "sessionTimeout": 3600000
+    }
+  },
+  
+  "api": {
+    "documentation": {
+      "enabled": true,
+      "path": "/api-docs",
+      "swagger": false,
+      "examples": true
+    },
+    "version": "v1",
+    "basePath": "/api",
+    "rateLimit": {
+      "enabled": true,
+      "requestsPerMinute": 60
+    }
+  },
+  
+  "logging": {
+    "enabled": true,
+    "level": "info",
+    "files": {
+      "server": "logs/server.log",
+      "errors": "logs/errors.log",
+      "scraping": "logs/scraping.log",
+      "access": "logs/access.log"
+    },
+    "rotation": {
+      "enabled": true,
+      "size": "10m",
+      "keep": 7
+    }
+  },
+  
+  "monitoring": {
+    "healthCheck": {
+      "enabled": true,
+      "path": "/health",
+      "interval": 30000
+    },
+    "performance": {
+      "enabled": true,
+      "metrics": ["cpu", "memory", "disk", "network"]
+    },
+    "alerts": {
+      "enabled": true,
+      "thresholds": {
+        "cpu": 80,
+        "memory": 85,
+        "disk": 90
+      }
+    }
+  },
+  
+  "backup": {
+    "enabled": true,
+    "schedule": "0 2 * * *",
+    "retention": 30,
+    "locations": {
+      "local": "data/backup",
+      "cloud": false
+    },
+    "include": ["data", "config.json", ".env"]
+  },
+  
+  "features": {
+    "autoUpdate": false,
+    "notifications": true,
+    "maintenanceMode": false,
+    "multiLanguage": false,
+    "darkMode": true
+  },
+  
+  "development": {
+    "debug": true,
+    "hotReload": true,
+    "testMode": false,
+    "mockData": true
+  }
+}

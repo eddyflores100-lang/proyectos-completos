@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowBoard - Gestión de Proyectos Inteligente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .cta-button {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 180px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .secondary-button {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .secondary-button:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        /* Features */
+        .features {
+            padding: 100px 0;
+            background: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: var(--light);
+            padding: 40px;
+            border-radius: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            color: white;
+            font-size: 28px;
+        }
+        
+        /* Dashboard Preview */
+        .dashboard-preview {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%);
+        }
+        
+        .dashboard-container {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .dashboard-item {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 12px;
+            min-height: 120px;
+        }
+        
+        .dashboard-item.large {
+            grid-column: span 2;
+        }
+        
+        /* Integrations */
+        .integrations {
+            padding: 100px 0;
+            background: white;
+        }
+        
+        .integrations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 30px;
+            justify-items: center;
+        }
+        
+        .integration-item {
+            width: 120px;
+            height: 120px;
+            background: var(--light);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+        
+        .integration-item:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f5f3ff 0%, #e0e7ff 100%);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .pricing-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .pricing-card.popular {
+            border: 2px solid var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin: 20px 0;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            padding: 100px 0;
+            background: white;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 16px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        /* CTA */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-item.large {
+                grid-column: span 1;
+            }
+            
+            .pricing-card.popular {
+                transform: none;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">FlowBoard</div>
+                <div class="nav-links">
+                    <a href="#features">Características</a>
+                    <a href="#pricing">Precios</a>
+                    <a href="#integrations">Integraciones</a>
+                    <a href="#testimonials">Testimonios</a>
+                </div>
+                <button class="cta-button">Comenzar Gratis</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Gestiona Proyectos con <span>Inteligencia Artificial</span></h1>
+            <p>FlowBoard combina tableros Kanban, gestión de tareas y análisis predictivo en una plataforma unificada. Optimiza flujos de trabajo y aumenta la productividad de tu equipo.</p>
+            <div class="hero-buttons">
+                <button class="cta-button">Probar Gratis 14 Días</button>
+                <button class="secondary-button">Ver Demo</button>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <h3>10K+</h3>
+                    <p>Equipos</p>
+                </div>
+                <div class="stat-item">
+                    <h3>98%</h3>
+                    <p>Satisfacción</p>
+                </div>
+                <div class="stat-item">
+                    <h3>40%</h3>
+                    <p>+ Productividad</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Potencia Tu Productividad</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>IA Predictiva</h3>
+                    <p>Nuestra IA analiza patrones y predice cuellos de botella antes de que ocurran, sugiriendo optimizaciones automáticas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <h3>Tableros Inteligentes</h3>
+                    <p>Tableros Kanban personalizables con automatizaciones que se adaptan a tus flujos de trabajo específicos.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Analítica Avanzada</h3>
+                    <p>Dashboards en tiempo real con métricas de rendimiento, velocidad del equipo y análisis de capacidad.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section class="dashboard-preview">
+        <div class="container">
+            <h2 class="section-title">Dashboard Intuitivo</h2>
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <h3 style="color: var(--primary);">Vista General del Proyecto</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <div style="padding: 8px 16px; background: var(--light); border-radius: 8px; font-weight: 500;">Esta Semana</div>
+                        <div style="padding: 8px 16px; background: var(--primary); color: white; border-radius: 8px; font-weight: 500;">Mi Equipo</div>
+                    </div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dashboard-item">
+                        <h4 style="margin-bottom: 10px;">Tareas Completadas</h4>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--success);">42</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <h4 style="margin-bottom: 10px;">En Progreso</h4>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--warning);">18</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <h4 style="margin-bottom: 10px;">Velocidad</h4>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">24.5</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <h4 style="margin-bottom: 10px;">Satisfacción</h4>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--success);">94%</div>
+                    </div>
+                    <div class="dashboard-item large">
+                        <h4 style="margin-bottom: 15px;">Distribución de Tareas</h4>
+                        <div style="display: flex; gap: 20px; height: 100px;">
+                            <div style="flex: 1; background: linear-gradient(to top, var(--success) 60%, transparent 60%); border-radius: 8px;"></div>
+                            <div style="flex: 1; background: linear-gradient(to top, var(--warning) 40%, transparent 60%); border-radius: 8px;"></div>
+                            <div style="flex: 1; background: linear-gradient(to top, var(--primary) 75%, transparent 60%); border-radius: 8px;"></div>
+                        </div>
+                    </div>
+                </div

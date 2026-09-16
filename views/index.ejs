@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        
+        .stat-icon i {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .stat-card h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .project-header {
+            background: var(--gradient);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .project-icon {
+            font-size: 2rem;
+        }
+        
+        .project-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .project-body {
+            padding: 1.5rem;
+        }
+        
+        .project-features {
+            list-style: none;
+            margin: 1rem 0;
+        }
+        
+        .project-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .project-features i {
+            color: var(--secondary);
+        }
+        
+        .project-status {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        
+        .status-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 2px solid var(--gray);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--gray);
+            color: white;
+        }
+        
+        .system-info {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 3rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .info-icon i {
+            color: white;
+        }
+        
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+        
+        .link-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .link-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+            color: var(--gray);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-actions {
+                flex-direction: column;
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Portal de Proyectos Completos</h1>
+            <p>Sistema integral con landing pages profesionales, scraping avanzado, dashboard analytics y panel de administración</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3><%= stats.totalProjects %></h3>
+                <p>Proyectos Activos</p>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3><%= stats.activeProjects %></h3>
+                <p>En Ejecución</p>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3><%= stats.uptime %></h3>
+                <p>Uptime del Sistema</p>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3><%= stats.lastUpdated %></h3>
+                <p>Última Actualización</p>
+            </div>
+        </div>
+        
+        <h2 style="margin-bottom: 1.5rem; font-size: 2rem;">📂 Proyectos Disponibles</h2>
+        
+        <div class="projects-grid">
+            <% projects.forEach(project => { %>
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-icon"><%= project.icon %></div>
+                    <h3><%= project.name %></h3>
+                </div>
+                <div class="project-body">
+                    <p>Sistema completo y profesional listo para producción.</p>
+                    
+                    <ul class="project-features">
+                        <li><i class="fas fa-check"></i> Diseño responsive</li>
+                        <li><i class="fas fa-check"></i> Optimizado para SEO</li>
+                        <li><i class="fas fa-check"></i> Código limpio y documentado</li>
+                        <li><i class="fas fa-check"></i> Fácil de personalizar</li>
+                    </ul>
+                    
+                    <div class="project-status status-active">
+                        <i class="fas fa-circle pulse"></i> <%= project.status %>
+                    </div>
+                    
+                    <div class="project-actions">
+                        <a href="<%= project.path %>" class="btn btn-primary">
+                            <i class="fas fa-external-link-alt"></i> Ver Proyecto
+                        </a>
+                        <a href="<%= project.path %>/docs" class="btn btn-secondary">
+                            <i class="fas fa-book"></i> Documentación
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+        
+        <div class="system-info">
+            <h2><i class="fas fa-info-circle"></i> Información del Sistema</h2>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div>
+                        <h4>Servidor Activo</h4>
+                        <p>Puerto 3000</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div>
+                        <h4>Base de Datos</h4>
+                        <p>MySQL Lista</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <h4>Seguridad</h4>
+                        <p>Protegido</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h4>Rendimiento</h4>
+                        <p>Óptimo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quick-links">
+            <a href="/dashboard" class="link-card">
+                <div class="link-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div>
+                    <h4>Dashboard Analytics</h4>
+                    <p>Métricas en tiempo real</p>
+                </div>
+            </a>
+            
+            <a href="/api-docs" class="link-card">
+                <div class="link-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div>
+                    <h4>API Documentation</h4>
+                    <p>Endpoints completos</p>
+                </div>
+            </a>
+            
+            <a href="/admin" class="link-card">
+                <div class="link-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div>
+                    <h4>Panel de Admin</h4>
+                    <p>Gestión del sistema</p>
+                </div>
+            </a>
+            
+            <a href="/health" class="link-card">
+                <div class="link-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div>
+                    <h4>Health Check</h4>
+                    <p>Estado del sistema</p>
+                </div>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>🚀 Sistema desarrollado con Node.js, Express y tecnologías modernas</p>
+            <p>📧 Contacto: sistema@proyectoscompletos.com | 📞 Soporte: 24/7</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                <i class="fas fa-sync-alt"></i> Última actualización: <%= new Date().toLocaleString() %>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Actualizar hora en tiempo real
+        function updateTime() {
+            const timeElement = document.querySelector('.footer p:last-child');
+            if (timeElement) {
+                const now = new Date();
+                timeElement.innerHTML = `<i class="fas fa-sync-alt"></i> Última actualización: ${now.toLocaleString()}`;
+            }
+        }
+        
+        setInterval(updateTime, 60000);
+        
+        // Animación de carga
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.project-card, .stat-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('animate');
+            });
+        });
+    </script>
+</body>
+</html>

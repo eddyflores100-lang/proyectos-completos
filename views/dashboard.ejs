@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --warning: #f97316;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            color: var(--dark);
+            min-height: 100vh;
+        }
+        
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-menu {
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .stat-icon.scraping { background: #dbeafe; color: var(--primary); }
+        .stat-icon.landing { background: #dcfce7; color: var(--secondary); }
+        .stat-icon.system { background: #fef3c7; color: var(--warning); }
+        
+        .stat-content h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        
+        .stat-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .chart-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        /* Activity Feed */
+        .activity-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .activity-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .activity-list {
+            list-style: none;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .activity-icon.success { background: var(--secondary); }
+        .activity-icon.warning { background: var(--warning); }
+        .activity-icon.info { background: var(--primary); }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-content h4 {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        
+        .activity-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .activity-time {
+            color: var(--gray);
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .action-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .action-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        .action-btn i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        /* System Status */
+        .system-status {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: var(--radius);
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-indicator.online { background: var(--secondary); }
+        .status-indicator.warning { background: var(--warning); }
+        .status-indicator.offline { background: var(--danger); }
+        
+        .status-content h4 {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        
+        .status-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                height: auto;
+                position: static;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">📊 Dashboard</div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/dashboard" class="nav-link active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        <span>Inicio</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/saas-avanzado" class="nav-link">
+                        <i class="fas fa-rocket"></i>
+                        <span>SaaS Landing</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/ecommerce-premium" class="nav-link">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>E-commerce</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/api/scraping" class="nav-link">
+                        <i class="fas fa-search"></i>
+                        <span>Scraping API</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <span>Administración</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/api-docs" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Documentación</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1><%= title %></h1>
+                <div class="user-info">
+                    <div class="user-avatar">AD</div>
+                    <div>
+                        <h4>Administrador</h4>
+                        <p style="color: var(--gray); font-size: 0.9rem;">Último acceso: Hoy</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card animate">
+                    <div class="stat-icon scraping">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3><%= metrics.scraping.totalLeads.toLocaleString() %></h3>
+                        <p>Leads Scrapeados</p>
+                        <small style="color: var(--secondary);">+<%= metrics.scraping.today %> hoy</small>
+                    </div>
+                </div>
+                
+                <div class="stat-card animate">
+                    <div class="stat-icon landing">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3><%= metrics.landingPages.visitors.toLocaleString() %></h3>
+                        <p>Visitantes Landing</p>
+                        <small style="color: var(--secondary);"><%= metrics.landingPages.conversion %> conversión</small>
+                    </div>
+                </div>
+                
+                <div class="stat-card animate">
+                    <div class="stat-icon system">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3><%= metrics.system.uptime %></h3>
+                        <p>Uptime Sistema</p>
+                        <small style="color: var(--secondary);"><%= metrics.system.activeUsers %> usuarios activos</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card animate">
+                    <h3>📈 Actividad de Scraping (Últimos 7 días)</h3>
+                    <div class="chart-container">
+                        <canvas id="scrapingChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card animate">
+                    <h3>🎯 Fuentes de Datos</h3>
+                    <div class="chart-container">
+                        <canvas id="sourcesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Feed -->
+            <div class="activity-card animate">
+                <h3>📋 Actividad Reciente</h3>
+                <ul class="activity-list">
+                    <% recentActivity.forEach(activity => { %>
+                    <li class="activity-item">
+                        <div class="activity-icon success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4><%= activity.project %></h4>
+                            <p><%= activity.action %></p>
+                        </div>
+                        <div class="activity-time"><%= activity.time %></div>
+                    </li>
+                    <% }); %>
+                </ul>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <a href="/api/scraping/start" class="action-btn animate">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Iniciar Scraping</span>
+                </a>
+                
+                <a href="/admin" class="action-btn animate">
+                    <i class="fas fa-cogs"></i>
+                    <span>Panel Admin</span>
+                </a>
+                
+                <a href="/api-docs" class="action-btn animate">
+                    <i class="fas fa-code"></i>
+                    <span>Ver API Docs</span>
+                </a>
+                
+                <a href="/health" class="action-btn animate">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Health Check</span>
+                </a>
+            </div>
+
+            <!-- System Status -->
+            <div class="system-status animate">
+                <h3>⚙️ Estado del Sistema</h3>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-indicator online"></div>
+                        <div class="status-content">
+                            <h4>Web Server</h4>
+                            <p>Puerto 3000 - Activo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="status-item">
+                        <div class="status-indicator online"></div>
+                        <div class="status-content">
+                            <h4>Base de Datos</h4>
+                            <p>MySQL - Conectado</p>
+                        </div>
+                    </div>
+                    
+                    <div class="status-item">
+                        <div class="status-indicator online"></div>
+                        <div class="status-content">
+                            <h4>Scraping Service</h4>
+                            <p>En ejecución</p>
+                        </div>
+                    </div>
+                    
+                    <div class="status-item">
+                        <div class="status-indicator online"></div>
+                        <div class="status-content">
+                            <h4>API REST</h4>
+                            <p>100% operativa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script

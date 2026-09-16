@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - API Documentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --code-bg: #1e293b;
+            --code-color: #94a3b8;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .docs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .api-nav {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .nav-link {
+            padding: 0.5rem 1rem;
+            background: #f8fafc;
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .endpoint-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .method {
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        
+        .method.get { background: #dbeafe; color: var(--primary); }
+        .method.post { background: #dcfce7; color: var(--secondary); }
+        .method.put { background: #fef3c7; color: #d97706; }
+        .method.delete { background: #fee2e2; color: #dc2626; }
+        
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .endpoint-description {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+        
+        .code-block {
+            background: var(--code-bg);
+            color: var(--code-color);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+        
+        .code-block .keyword { color: #60a5fa; }
+        .code-block .string { color: #34d399; }
+        .code-block .number { color: #fbbf24; }
+        .code-block .comment { color: #94a3b8; font-style: italic; }
+        
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .params-table th {
+            background: #f8fafc;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .params-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .param-name {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .param-type {
+            background: #f1f5f9;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .response-example {
+            background: #f0f9ff;
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin: 1.5rem 0;
+        }
+        
+        .response-example h4 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .quick-test {
+            background: #f8fafc;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .test-form {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            padding: 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .test-result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .test-result.success {
+            background: #dcfce7;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            display: block;
+        }
+        
+        .test-result.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            display: block;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+            color: var(--gray);
+        }
+        
+        @media (max-width: 768px) {
+            .docs-container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            .endpoint-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .params-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+        
+        .copy-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge.required {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .badge.optional {
+            background: #fef3c7;
+            color: #d97706;
+        }
+    </style>
+</head>
+<body>
+    <div class="docs-container">
+        <div class="header">
+            <h1>📚 Documentación de API</h1>
+            <p>Documentación completa de todos los endpoints disponibles en el sistema</p>
+        </div>
+        
+        <div class="api-nav">
+            <div class="nav-links">
+                <a href="#scraping" class="nav-link">Scraping API</a>
+                <a href="#system" class="nav-link">System API</a>
+                <a href="#auth" class="nav-link">Authentication</a>
+                <a href="#errors" class="nav-link">Error Codes</a>
+                <a href="#examples" class="nav-link">Examples</a>
+            </div>
+        </div>
+        
+        <!-- Scraping API Section -->
+        <div class="endpoint-section" id="scraping">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="endpoint-path">/api/scraping</span>
+            </div>
+            
+            <p class="endpoint-description">
+                Obtiene información sobre el sistema de scraping y los endpoints disponibles.
+            </p>
+            
+            <div class="code-block">
+                <span class="keyword">GET</span> http://localhost:3000/api/scraping<br>
+                <span class="comment">// Response:</span><br>
+                {<br>
+                &nbsp;&nbsp;<span class="string">"status"</span>: <span class="string">"active"</span>,<br>
+                &nbsp;&nbsp;<span class="string">"endpoints"</span>: {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"start"</span>: <span class="string">"/api/scraping/start"</span>,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"status"</span>: <span class="string">"/api/scraping/status"</span>,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"results"</span>: <span class="string">"/api/scraping/results"</span>,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"export"</span>: <span class="string">"/api/scraping/export"</span><br>
+                &nbsp;&nbsp;}<br>
+                }
+            </div>
+        </div>
+        
+        <!-- Start Scraping Endpoint -->
+        <div class="endpoint-section">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="endpoint-path">/api/scraping/start</span>
+            </div>
+            
+            <p class="endpoint-description">
+                Inicia un nuevo trabajo de scraping con los parámetros especificados.
+            </p>
+            
+            <h3>📋 Parámetros del Body (JSON)</h3>
+            <table class="params-table">
+                <thead>
+                    <tr>
+                        <th>Parámetro</th>
+                        <th>Tipo</th>
+                        <th>Requerido</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="param-name">source</span></td>
+                        <td><span class="param-type">string</span></td>
+                        <td><span class="badge required">Requerido</span></td>
+                        <td>Fuente de datos: "linkedin", "indeed", "glassdoor", "custom"</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">keywords</span></td>
+                        <td><span class="param-type">array[string]</span></td>
+                        <td><span class="badge required">Requerido</span></td>
+                        <td>Palabras clave para buscar</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">location</span></td>
+                        <td><span class="param-type">string</span></td>
+                        <td><span class="badge optional">Opcional</span></td>
+                        <td>Ubicación para filtrar resultados</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">maxResults</span></td>
+                        <td><span class="param-type">number</span></td>
+                        <td><span class="badge optional">Opcional</span></td>
+                        <td>Máximo de resultados (default: 100)</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="response-example">
+                <h4>✅ Respuesta Exitosa</h4>
+                <div class="code-block">
+                    {<br>
+                    &nbsp;&nbsp;<span class="string">"success"</span>: <span class="keyword">true</span>,<br>
+                    &nbsp;&nbsp;<span class="string">"message"</span>: <span class="string">"Scraping iniciado"</span>,<br>
+                    &nbsp;&nbsp;<span class="string">"jobId"</span>: <span class="string">"job_1703275200000"</span>,<br>
+                    &nbsp;&nbsp;<span class="string">"checkStatus"</span>: <span class="string">"/api/scraping/status/job_1703275200000"</span><br>
+                    }
+                </div>
+            </div>
+            
+            <div class="quick-test">
+                <h3>🚀 Probar Endpoint</h3>
+                <form class="test-form" id="testScrapingForm">
+                    <div class="form-group">
+                        <label class="form-label">Source:</label>
+                        <select class="form-input" name="source">
+                            <option value="linkedin">LinkedIn</option>
+                            <option value="indeed">Indeed</option>
+                            <option value="glassdoor">Glassdoor</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Keywords (separadas por comas):</label>
+                        <input class="form-input" type="text" name="keywords" value="developer, engineer" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Location:</label>
+                        <input class="form-input" type="text" name="location" value="Remote">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Probar Endpoint
+                    </button>
+                </form>
+                
+                <div class="test-result" id="testResult"></div>
+            </div>
+        </div>
+        
+        <!-- System API Section -->
+        <div class="endpoint-section" id="system">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="endpoint-path">/health</span>
+            </div>
+            
+            <p class="endpoint-description">
+                Verifica el estado de salud del sistema y todos sus componentes.
+            </p>
+            
+            <div class="code-block">
+                <span class="keyword">GET</span> http://localhost:3000/health<br>
+                <span class="comment">// Response:</span><br>
+                {<br>
+                &nbsp;&nbsp;<span class="string">"status"</span>: <span class="string">"healthy"</span>,<br>
+                &nbsp;&nbsp;<span class="string">"timestamp"</span>: <span class="string">"2026-02-22T16:30:00.000Z"</span>,<br>
+                &nbsp;&nbsp;<span class="string">"services"</span>: {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class
