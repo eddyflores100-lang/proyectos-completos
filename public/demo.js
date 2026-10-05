@@ -1,0 +1,3 @@
+document.addEventListener('submit', event => event.preventDefault(), true);
+document.querySelectorAll('form').forEach(form => { const note = document.createElement('p'); note.className='alicelabs-demo-note'; note.textContent='Formulario de muestra desactivado. No introduzcas datos personales. Para adaptar este diseño usa el enlace de AliceLabs de la barra superior.'; form.prepend(note); form.querySelectorAll('input,textarea,select,button').forEach(el => el.disabled=true); });
+document.querySelectorAll('button').forEach(button => {button.disabled=true;button.title='Control de muestra; función no implementada';});
